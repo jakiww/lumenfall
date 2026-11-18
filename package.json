@@ -1,0 +1,1 @@
+{"description":"LUMENFALL — the last Lumen Keeper. A top-down 2D arena roguelite for the make.fun best-game-01 bounty.","license":"MIT","name":"lumenfall","private":true,"scripts":{"build":"MAKEFUN_OUTPUT_DIR=out node main.ts"},"type":"module","version":"1.0.0"}
