@@ -4,7 +4,7 @@
 // with buildDossier from the kit's library (vendor/makefun-game.ts).
 // Outside the grader, MAKEFUN_OUTPUT_DIR stands in for /output.
 
-import { cpSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-game.ts';
@@ -19,11 +19,14 @@ const GAME_CAPS = {
   game_max_bytes: 50331648,
 };
 
-// Start from a clean output directory (never the repo root itself).
-if (outDir !== repoRoot && outDir !== '/') {
-  rmSync(outDir, { recursive: true, force: true });
-}
+// Start from a clean output directory. NEVER remove the directory itself:
+// in the grader /output is a mount point whose parent directory is
+// read-only for the grading user, so removing it fails with EACCES.
+// Remove only its contents instead.
 mkdirSync(outDir, { recursive: true });
+for (const entry of readdirSync(outDir)) {
+  rmSync(join(outDir, entry), { recursive: true, force: true });
+}
 
 // The playable game and its screenshots, copied whole.
 cpSync(join(repoRoot, 'game'), join(outDir, 'game'), { recursive: true });
